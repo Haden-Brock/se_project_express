@@ -18,8 +18,10 @@ module.exports.getUserById = (req, res) => {
         })
         .then(user => res.send({data: user}))
         .catch((err) => {
-            if(err.name === "NotFound" || err.name === "CastError") {
+            if(err.name === "NotFound") {
                 res.status(404).send({message: 'User ID not found.'});
+            } else if(err.name === "CastError"){
+                res.status(400).send({message: 'Invalid ID format.'})
             } else {
                 res.status(500).send({message: 'An error has occurred on the server.'});
             }

@@ -13,7 +13,7 @@ module.exports.createClothingItem = (req, res) => {
 
     const likes = [];
 
-    console.log(req.user._id);
+    console.log({ name, weather, imageUrl});
     ClothingItem.create({ name, weather, imageUrl, owner, likes })
         .then(item => res.status(201).send(item))
         .catch((err) => {
