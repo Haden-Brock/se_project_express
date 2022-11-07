@@ -3,9 +3,7 @@ const ClothingItem = require('../models/clothingItem');
 module.exports.getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
-    .catch(() =>
-      res.status(500).send({ message: 'An error has occurred on the server' })
-    );
+    .catch(() => res.status(500).send({ message: 'An error has occurred on the server' }));
 };
 
 module.exports.createClothingItem = (req, res) => {
@@ -15,7 +13,9 @@ module.exports.createClothingItem = (req, res) => {
 
   const likes = [];
 
-  ClothingItem.create({ name, weather, imageUrl, owner, likes })
+  ClothingItem.create({
+    name, weather, imageUrl, owner, likes,
+  })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -31,15 +31,13 @@ module.exports.createClothingItem = (req, res) => {
 };
 
 module.exports.deleteClothingItem = (req, res) => {
-  const itemId = req.params.itemId;
+  const { itemId } = req.params;
 
   ClothingItem.findByIdAndRemove(itemId)
     .orFail()
-    .then((item) =>
-      res
-        .status(200)
-        .send({ message: 'Item successfully deleted.', deleted: item })
-    )
+    .then((item) => res
+      .status(200)
+      .send({ message: 'Item successfully deleted.', deleted: item }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
         res.status(404).send({ message: 'Item ID not found.' });
@@ -57,7 +55,7 @@ module.exports.likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((item) => res.send(item))
@@ -78,7 +76,7 @@ module.exports.dislikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((item) => res.send(item))

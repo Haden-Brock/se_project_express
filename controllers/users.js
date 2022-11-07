@@ -9,9 +9,9 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  const { userId } = req.params.userId;
+  const userId = req.params.userId;
 
-  User.findById({ userId })
+  User.findById(userId)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
