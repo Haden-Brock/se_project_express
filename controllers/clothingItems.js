@@ -34,19 +34,14 @@ module.exports.deleteClothingItem = (req, res) => {
   const itemId = req.params.itemId;
 
   ClothingItem.findByIdAndRemove(itemId)
-    .orFail(() => {
-      const err = new Error("Item ID not found");
-      err.statusCode = 404;
-      err.name = "NotFound";
-      throw err;
-    })
+    .orFail()
     .then((item) =>
       res
         .status(200)
         .send({ message: "Item successfully deleted.", deleted: item })
     )
     .catch((err) => {
-      if (err.name === "NotFound") {
+      if (err.name === "DocumentNotFoundError") {
         res.status(404).send({ message: "Item ID not found." });
       } else if (err.name === "CastError") {
         res.status(400).send({ message: "Invalid ID format" });
@@ -64,15 +59,10 @@ module.exports.likeItem = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .orFail(() => {
-      const err = new Error("Item ID not found");
-      err.statusCode = 404;
-      err.name = "NotFound";
-      throw err;
-    })
+    .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      if (err.name === "NotFound") {
+      if (err.name === "DocumentNotFoundError") {
         res.status(404).send({ message: "Item ID not found." });
       } else if (err.name === "CastError") {
         res.status(400).send({ message: "Invalid ID format" });
@@ -90,15 +80,10 @@ module.exports.dislikeItem = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .orFail(() => {
-      const err = new Error("Item ID not found");
-      err.statusCode = 404;
-      err.name = "NotFound";
-      throw err;
-    })
+    .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      if (err.name === "NotFound") {
+      if (err.name === "DocumentNotFoundError") {
         res.status(404).send({ message: "Item ID not found." });
       } else if (err.name === "CastError") {
         res.status(400).send({ message: "Invalid ID format" });

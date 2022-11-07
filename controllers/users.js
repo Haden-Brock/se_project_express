@@ -9,18 +9,13 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  const { userId } = req.params.userId;
+  const userId = req.params.userId;
 
   User.findById(userId)
-    .orFail(() => {
-      const err = new Error("Item ID not found");
-      err.statusCode = 404;
-      err.name = "NotFound";
-      throw err;
-    })
+    .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === "NotFound") {
+      if (err.name === "DocumentNotFoundError") {
         res.status(404).send({ message: "User ID not found." });
       } else if (err.name === "CastError") {
         res.status(400).send({ message: "Invalid ID format." });

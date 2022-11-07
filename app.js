@@ -22,17 +22,10 @@ app.use("/users", require("./routes/users"));
 
 app.use("/items", require("./routes/clothingItems"));
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   const err = new Error("NotFound");
   err.status = 404;
-  next(err);
-});
-
-app.use((error, req, res) => {
-  res.status(error.status || 500);
-  res.json({
-    message: "Cannot be found.",
-  });
+  res.status(404).send({ message: "The requested page does not exist" });
 });
 
 app.listen(PORT, () => {
