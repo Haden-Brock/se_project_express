@@ -1,6 +1,6 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const { PORT = 3001 } = process.env;
 
@@ -9,23 +9,23 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb://localhost:27017/wtwr_db");
+mongoose.connect('mongodb://localhost:27017/wtwr_db');
 
 app.use((req, res, next) => {
   req.user = {
-    _id: "63670c809dee89ca0eec5dc7",
+    _id: '63670c809dee89ca0eec5dc7',
   };
   next();
 });
 
-app.use("/users", require("./routes/users"));
+app.use('/users', require('./routes/users'));
 
-app.use("/items", require("./routes/clothingItems"));
+app.use('/items', require('./routes/clothingItems'));
 
 app.use((req, res) => {
-  const err = new Error("NotFound");
+  const err = new Error('NotFound');
   err.status = 404;
-  res.status(404).send({ message: "The requested page does not exist" });
+  res.status(404).send({ message: 'The requested page does not exist' });
 });
 
 app.listen(PORT, () => {

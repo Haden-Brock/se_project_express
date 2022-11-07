@@ -1,10 +1,10 @@
-const ClothingItem = require("../models/clothingItem");
+const ClothingItem = require('../models/clothingItem');
 
 module.exports.getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
     .catch(() =>
-      res.status(500).send({ message: "An error has occurred on the server" })
+      res.status(500).send({ message: 'An error has occurred on the server' })
     );
 };
 
@@ -18,14 +18,14 @@ module.exports.createClothingItem = (req, res) => {
   ClothingItem.create({ name, weather, imageUrl, owner, likes })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(400)
-          .send({ message: "Invalid data for clothing item creation." });
+          .send({ message: 'Invalid data for clothing item creation.' });
       } else {
         res
           .status(500)
-          .send({ message: "An error has occurred on the server" });
+          .send({ message: 'An error has occurred on the server' });
       }
     });
 };
@@ -38,17 +38,17 @@ module.exports.deleteClothingItem = (req, res) => {
     .then((item) =>
       res
         .status(200)
-        .send({ message: "Item successfully deleted.", deleted: item })
+        .send({ message: 'Item successfully deleted.', deleted: item })
     )
     .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        res.status(404).send({ message: "Item ID not found." });
-      } else if (err.name === "CastError") {
-        res.status(400).send({ message: "Invalid ID format" });
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(404).send({ message: 'Item ID not found.' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Invalid ID format' });
       } else {
         res
           .status(500)
-          .send({ message: "An error has occurred on the server." });
+          .send({ message: 'An error has occurred on the server.' });
       }
     });
 };
@@ -62,14 +62,14 @@ module.exports.likeItem = (req, res) => {
     .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        res.status(404).send({ message: "Item ID not found." });
-      } else if (err.name === "CastError") {
-        res.status(400).send({ message: "Invalid ID format" });
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(404).send({ message: 'Item ID not found.' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Invalid ID format' });
       } else {
         res
           .status(500)
-          .send({ message: "An error has occurred on the server." });
+          .send({ message: 'An error has occurred on the server.' });
       }
     });
 };
@@ -83,14 +83,14 @@ module.exports.dislikeItem = (req, res) => {
     .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        res.status(404).send({ message: "Item ID not found." });
-      } else if (err.name === "CastError") {
-        res.status(400).send({ message: "Invalid ID format" });
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(404).send({ message: 'Item ID not found.' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Invalid ID format' });
       } else {
         res
           .status(500)
-          .send({ message: "An error has occurred on the server." });
+          .send({ message: 'An error has occurred on the server.' });
       }
     });
 };
