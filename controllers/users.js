@@ -3,7 +3,7 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'An error has occurred on the server.', }));
+    .catch(() => res.status(500).send({ message: 'An error has occurred on the server.' }));
 };
 
 module.exports.getUserById = (req, res) => {
