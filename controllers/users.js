@@ -42,9 +42,8 @@ module.exports.createUser = (req, res) => {
   .then((hash) => {
     return User.create({ name, avatar, email, password: hash })
   })
-  .then(res.status(201).send({ data: { name, avatar, email } }))
+  .then((user) => res.status(201).send({ data: user }))
   .catch((err) => {
-    console.log(err.message);
     if(err.message === 'ExistingUser') {
       res.status(409).send({ message: 'There is already a user with that email.'});
     } else if (err.name === 'ValidationError') {
