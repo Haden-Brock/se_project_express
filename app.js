@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3001 } = process.env;
 
@@ -11,16 +13,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/wtwr_db');
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63670c809dee89ca0eec5dc7',
-  };
-  next();
-});
+app.post('/signin', login);
+app.post('/signup', createUser);
+
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
-
 app.use('/items', require('./routes/clothingItems'));
+
+
 
 app.use((req, res) => {
   const err = new Error('NotFound');

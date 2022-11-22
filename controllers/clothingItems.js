@@ -32,16 +32,24 @@ module.exports.createClothingItem = (req, res) => {
 
 module.exports.deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
+  const itemOwner = req.params.owner;
+  const  requestOwner = req.user._id;
+  if(requestOwner !== itemOwner) {
+    throw new Error('InvalidAccess');
+  }
 
   ClothingItem.findByIdAndRemove(itemId)
     .orFail()
     .then((item) => res
       .status(200)
-      .send({ message: 'Item successfully deleted.', deleted: item }))
+      .send({ message: 'Item successfully deleted.', deleted: item })) 
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
         res.status(404).send({ message: 'Item ID not found.' });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === 'InvalidAccess') {
+        res.status(403).send({ message: 'Invalid authorization'});
+      } 
+      else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Invalid ID format' });
       } else {
         res
