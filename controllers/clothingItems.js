@@ -35,7 +35,7 @@ module.exports.deleteClothingItem = (req, res) => {
   const itemOwner = req.params.owner;
   const requestOwner = req.user._id;
   try {
-    if(requestOwner !== itemOwner) {
+    if(req.user._id !== req.params.owner) {
       throw new Error('Invalid Access');
     }
     ClothingItem.findByIdAndRemove(itemId)
