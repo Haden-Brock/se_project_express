@@ -13,3 +13,6 @@ The back-end project is focused on creating a server for the WTWR application. Y
 - Express routing to communicate with MongoDB
 - Uses Mongoose Schemas
 - Custom error handling
+- User creation and editing with name, avatar, email, and password encryption
+- Authorization and Authentication using JWT
+

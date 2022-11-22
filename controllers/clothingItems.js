@@ -29,10 +29,10 @@ module.exports.deleteClothingItem = (req, res) => {
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
-      if(!item.owner.equals(req.user._id)){
+      if (!item.owner.equals(req.user._id)) {
         throw new Error('Invalid Access');
       }
-      return item.remove(() => res.send({ message: 'Item successfully deleted.', deleted: item}));
+      return item.remove(() => res.send({ message: 'Item successfully deleted.', deleted: item }));
     })
     .catch((err) => {
       handleError(err, res);

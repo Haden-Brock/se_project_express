@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { login, createUser } = require('./controllers/users');
 const cors = require('cors');
+const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3001 } = process.env;
 
@@ -19,8 +19,6 @@ app.post('/signup', createUser);
 
 app.use('/users', require('./routes/users'));
 app.use('/items', require('./routes/clothingItems'));
-
-
 
 app.use((req, res) => {
   const err = new Error('NotFound');
