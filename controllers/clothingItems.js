@@ -47,7 +47,7 @@ module.exports.deleteClothingItem = (req, res) => {
     if (err.name === 'DocumentNotFoundError') {
       res.status(404).send({ message: 'Item ID not found.' });
     } else if (err.message === 'Invalid Access') {
-      res.status(403).send({ message: 'Invalid authorization'});
+      res.status(403).send({ message: 'Invalid authorization', itemOwner: req.params.owner, requestOwner: req.user._id});
     } else if (err.name === 'CastError') {
       res.status(400).send({ message: 'Invalid ID format' });
     } else {
