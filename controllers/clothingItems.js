@@ -1,9 +1,10 @@
 const ClothingItem = require('../models/clothingItem');
+const { handleError } = require('../utils/errors');
 
 module.exports.getClothingItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
-    .catch(() => res.status(500).send({ message: 'An error has occurred on the server' }));
+    .catch((err) => handleError(err, res));
 };
 
 module.exports.createClothingItem = (req, res) => {
@@ -18,44 +19,24 @@ module.exports.createClothingItem = (req, res) => {
   })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res
-          .status(400)
-          .send({ message: 'Invalid data for clothing item creation.' });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
-      }
+      handleError(err, res);
     });
 };
 
 module.exports.deleteClothingItem = (req, res) => {
-  const { itemId, owner } = req.params;
-  const { _id } = req.user._id;
-  try {
-    ClothingItem.findOne({ itemId });
-    if( _id !== owner) {
-      throw new Error('Invalid Access');
-    }
-    ClothingItem.findByIdAndRemove(itemId)
+  const { itemId } = req.params;
+
+  ClothingItem.findById(itemId)
     .orFail()
-    .then((item) => res
-      .status(200)
-      .send({ message: 'Item successfully deleted.', deleted: item }))
-  } catch (err) {
-    if (err.name === 'DocumentNotFoundError') {
-      res.status(404).send({ message: 'Item ID not found.' });
-    } else if (err.message === 'Invalid Access') {
-      res.status(403).send({ message: 'Invalid authorization' });
-    } else if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Invalid ID format' });
-    } else {
-      res
-        .status(500)
-        .send({ message: 'An error has occurred on the server.' });
-    }
-  }
+    .then((item) => {
+      if(!item.owner.equals(req.user._id)){
+        throw new Error('Invalid Access');
+      }
+      return item.remove(() => res.send({ message: 'Item successfully deleted.', deleted: item}));
+    })
+    .catch((err) => {
+      handleError(err, res);
+    });
 };
 
 module.exports.likeItem = (req, res) => {
@@ -67,15 +48,7 @@ module.exports.likeItem = (req, res) => {
     .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'Item ID not found.' });
-      } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid ID format' });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server.' });
-      }
+      handleError(err, res);
     });
 };
 
@@ -88,14 +61,6 @@ module.exports.dislikeItem = (req, res) => {
     .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'Item ID not found.' });
-      } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid ID format' });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server.' });
-      }
+      handleError(err, res);
     });
 };

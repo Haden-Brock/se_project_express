@@ -2,30 +2,12 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET, userUpdateOptions } = require('../utils/config.js');
+const handleError = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'An error has occurred on the server.' }));
-};
-
-module.exports.getUserById = (req, res) => {
-  const { userId } = req.params;
-
-  User.findById(userId)
-    .orFail()
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'User ID not found.' });
-      } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid ID format.' });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server.' });
-      }
-    });
+    .catch((err) => handleError(err, res));
 };
 
 module.exports.createUser = (req, res) => {
@@ -44,14 +26,8 @@ module.exports.createUser = (req, res) => {
   })
   .then((user) => res.status(201).send({ data: {name, avatar, email} }))
   .catch((err) => {
-    if(err.message === 'ExistingUser') {
-      res.status(409).send({ message: 'There is already a user with that email.'});
-    } else if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Invalid data for user creation.' });
-    } else {
-      res.status(500).send({ message: 'An error has occurred on the server.'});
-    }
-  })
+    handleError(err, res);
+  });
 };
 
 module.exports.login = (req, res) => {
@@ -62,7 +38,8 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message});
+      err.name = 'LoginError';
+      handleError(err, res);
     });
 }
 
@@ -73,16 +50,8 @@ module.exports.getCurrentUser = (req, res) => {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'User ID not found.' });
-      } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid ID format.' });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server.' });
-      }
-    })
+      handleError(err, res);
+    });
 }
 
 module.exports.updateUser = (req, res) => {
@@ -93,14 +62,6 @@ module.exports.updateUser = (req, res) => {
     .orFail()
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'User ID not found.' });
-      } else if (err.name === 'CastError' || 'ValidationError') {
-        res.status(400).send({ message: 'Invalid ID format.' });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server.' });
-      }
-    })
+      handleError(err, res);
+    });
 }
