@@ -3,6 +3,6 @@ const { getCurrentUser, updateUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
 router.get('/me', auth, getCurrentUser);
-router.post('/me', auth, updateUser);
+router.patch('/me', auth, updateUser);
 
 module.exports = router;

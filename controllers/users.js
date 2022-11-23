@@ -26,7 +26,7 @@ module.exports.createUser = (req, res) => {
     .then((hash) => User.create({
       name, avatar, email, password: hash,
     }))
-    .then((user) => res.status(201).send({ data: { name, avatar, email } }))
+    .then(() => res.status(201).send({ data: { name, avatar, email } }))
     .catch((err) => {
       handleError(err, res);
     });
@@ -40,7 +40,6 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      err.name = 'LoginError';
       handleError(err, res);
     });
 };
