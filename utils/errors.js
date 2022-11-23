@@ -1,7 +1,7 @@
 function handleError(err, res) {
   if (err.name === 'CastError' || err.name === 'ValidationError') {
     res.status(400).send({ message: 'Invalid data.' });
-  } else if (err.name === 'LoginError') {
+  } else if (err.message === 'LoginError') {
     res.status(401).send({ message: 'Incorrect email or password' });
   } else if (err.message === 'Invalid Access') {
     res.status(403).send({ message: 'Invalid authorization' });
