@@ -13,19 +13,18 @@ const userSchema = new mongoose.Schema({
 
   avatar: {
     type: String,
-    required: true,
     validate: {
       validator(value) {
         return validator.isURL(value);
       },
       message: 'You must enter a valid URL',
     },
-    default: 'https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Elise.png',
   },
 
   email: {
     type: String,
     required: true,
+    unique: true,
     validate: {
       validator(value) {
         return validator.isEmail(value);
@@ -37,7 +36,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    unique: true,
     select: false,
   },
 });
