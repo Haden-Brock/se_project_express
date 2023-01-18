@@ -5,7 +5,7 @@ const cors = require('cors');
 const { login, createUser } = require('./controllers/users');
 const { celebrate, Joi, errors } = require('celebrate');
 const { validateUrl } = require('./utils/validateUrl');
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const app = express();
 app.use(cors());
