@@ -7,9 +7,9 @@ const validateUrl = require('../utils/validateUrl');
 router.get('/me', auth, getCurrentUser);
 router.patch('/me', auth, celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30), 
+    name: Joi.string().min(2).max(30),
     avatar: Joi.string().custom(validateUrl),
-  })
+  }),
 }), updateUser);
 
 module.exports = router;

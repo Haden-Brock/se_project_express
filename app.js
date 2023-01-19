@@ -2,22 +2,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { login, createUser } = require('./controllers/users');
 const { celebrate, Joi, errors } = require('celebrate');
-const { validateUrl } = require('./utils/validateUrl');
+const { login, createUser } = require('./controllers/users');
+
 const { PORT = 3001 } = process.env;
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const app = express();
 const allowedCors = [
   'https://hadenzbrock.students.nomoredomainssbs.ru',
   'http://hadenzbrock.students.nomoredomainssbs.ru',
-  'localhost:3001'
+  'localhost:3001',
 ];
-const DEFAULT_ALLOWED_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE";
+const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 app.use(cors());
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   const { origin } = req.headers;
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
@@ -49,33 +50,31 @@ app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  })
+  }),
 }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30), 
-    // avatar: Joi.string().required().custom(validateUrl),
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(2)
-  })
+    password: Joi.string().required().min(2),
+  }),
 }), createUser);
 
 app.use('/users', require('./routes/users'));
 app.use('/items', require('./routes/clothingItems'));
 
-app.use(errorLogger)
+app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  console.log(err);
   const { statusCode = 500, message } = err;
   res
     .status(statusCode)
     .send({
       message: statusCode === 500
         ? 'An error has occurred on the server'
-        : message 
+        : message,
     });
 });
 

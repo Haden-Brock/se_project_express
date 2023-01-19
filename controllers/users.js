@@ -3,18 +3,16 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET, userUpdateOptions } = require('../utils/config');
 const NotFoundError = require('../errors/not-found-error');
-const InvalidDataError = require('../errors/invalid-data-error');
 const LoginError = require('../errors/login-error');
 const ExistingUserError = require('../errors/existing-user-error');
-const AuthError = require('../errors/auth-error');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => {
-      if(!user) {
+      if (!user) {
         throw new NotFoundError('User ID not found');
       }
-      res.send({ data: user })
+      res.send({ data: user });
     })
     .catch(next);
 };
@@ -34,11 +32,8 @@ module.exports.createUser = (req, res, next) => {
     })
     .then((hash) => User.create({
       name, avatar, email, password: hash,
-      })
-      .then(() => {
-       return res.status(201).send({ data: { name, avatar, email } })
-      })
-    )
+    })
+      .then(() => res.status(201).send({ data: { name, avatar, email } })))
     .catch(next);
 };
 
@@ -46,7 +41,7 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      if(!user) {
+      if (user instanceof Error) {
         throw new LoginError('Incorrect email or password');
       }
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
@@ -61,10 +56,10 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(userId)
     .orFail()
     .then((user) => {
-      if(!user) {
+      if (!user) {
         throw new NotFoundError('User ID not found');
       }
-      res.send({ data: user })
+      res.send({ data: user });
     })
     .catch(next);
 };
@@ -76,10 +71,10 @@ module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(userId, updates, userUpdateOptions)
     .orFail()
     .then((user) => {
-      if(!user) {
+      if (!user) {
         throw new NotFoundError('User ID not found');
       }
-      res.send(user)
+      res.send(user);
     })
     .catch(next);
 };

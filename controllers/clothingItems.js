@@ -1,6 +1,4 @@
 const ClothingItem = require('../models/clothingItem');
-const handleError = require('../utils/validateUrl');
-const InvalidDataError = require('../errors/invalid-data-error');
 const AuthError = require('../errors/auth-error');
 
 module.exports.getClothingItems = (req, res, next) => {
