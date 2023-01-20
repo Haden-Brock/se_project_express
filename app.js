@@ -30,7 +30,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', requestHeaders);
     return res.end();
   }
-  next();
+  return next();
 });
 
 app.use(bodyParser.json());
@@ -79,5 +79,4 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`App listening at port: ${PORT}`);
 });
