@@ -15,6 +15,6 @@ The back-end project is focused on creating a server for the WTWR application. Y
 - Custom error handling
 - User creation and editing with name, avatar, email, and password encryption
 - Authorization and Authentication using JWT
-- Deployed to Google Cloud at https://hadenzbrock.students.nomoredomainssbs.ru
-- Back end deployed to sub-domain api.hadenzbrock.students.nomoredomainssbs.ru
+- Deployed to Google Cloud at https://hadenzbrock.students.nomoredomainssbs.ru (no longer live)
+- Back end deployed to sub-domain api.hadenzbrock.students.nomoredomainssbs.ru (no longer live)
 
